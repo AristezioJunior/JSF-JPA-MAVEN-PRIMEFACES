@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"><!--Grupos de componentes --> 
+	
+<h:head>
+
+	<meta charset="UTF-8"/>
+	<title>Gestão Empresas</title>
+	<h:outputStylesheet library="algaworks" name="estilo.css"/>
+</h:head>
+
+<h:body>
+
+		<!--Logomarca --> 
+	<header>
+		<h:graphicImage library="algaworks" name="logo.png"/>
+	</header>
+
+	<!--formulário de Empresas--> 
+	<div id="conteudo"> 	<!--id vem do arquivo css --> 
+		<h:form>
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Razão Social: " for="razaoSocial"/>
+				<h:inputText id="razaoSocial" value="#{gestaoEmpresasBean.empresa.razaoSocial}" />
+				
+				<h:outputLabel value="Nome fantasia: " for="nomeFantasia"/>
+				<h:inputText id="nomeFantasia" value="#{gestaoEmpresasBean.empresa.nomeFantasia}"/>
+				
+				<h:outputLabel value="Tipo empresa: " for="tipo"/>
+				<h:selectOneMenu id="tipo" value="#{gestaoEmpresasBean.empresa.tipo}">
+					<f:selectItem itemLabel="Selecione..."/>
+					<f:selectItems value="#{gestaoEmpresasBean.tiposEmpresa}"
+						var="tipoEmpresa" itemLabel="#{tipoEmpresa.descricao}" itemValue="#{tipoEmpresa}"/>
+				</h:selectOneMenu>				
+				
+				<h:outputLabel />
+				<h:commandButton value="Salvar" actionListener="#{gestaoEmpresasBean.salvar}"/>				
+				
+				<h:outputLabel />
+				<h:commandLink value="Ajuda?" action="#{gestaoEmpresasBean.ajuda}"/>				
+			</h:panelGrid>
+			
+			
+			<!--Tabela --> 
+			<h:dataTable value="#{[0, 0, 0, 0]}">
+				<!--h:column indica o número de colunas que a tabela vai ter --> 
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Razão Sozial" />
+					</f:facet>
+					
+					<h:outputText value="AlgaWorks Softwares, Treinamentos LTDA" />
+				</h:column>
+				
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Nome fantasia" />
+					</f:facet>
+					
+					<h:outputText value="AlgaWorks" />
+				</h:column>
+				
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Tipo Empresa" />
+					</f:facet>
+					
+					<h:outputText value="LTDA" />
+				</h:column>
+			</h:dataTable>
+			
+		</h:form>
+	</div>
+	
+	
+	
+	<!--Rodapé --> 
+	<footer>
+		Curso online "JSF PrimeFaces Essencial"
+	</footer>
+
+</h:body>
+
+</html>

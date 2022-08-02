@@ -1,0 +1,52 @@
+package com.algaworks.ecommerce.mapeamentobasico;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+import org.junit.Test;
+
+import com.algaworks.ecommerce.EntityManagerTest;
+import com.algaworks.ecommerce.model.Cliente;
+import com.algaworks.ecommerce.model.EnderecoEntregaPedido;
+import com.algaworks.ecommerce.model.Pedido;
+import com.algaworks.ecommerce.model.StatusPedido;
+
+import junit.framework.Assert;
+
+public class MapeamentoObjetoEmbutidoTest extends EntityManagerTest {
+	
+	@Test
+	public void analisarMapeamentoObjetoEmbutido() {
+		
+		Cliente cliente = entityManager.find(Cliente.class, 1);
+		
+		EnderecoEntregaPedido endereco = new EnderecoEntregaPedido();
+		endereco.setCep("000000-00");
+		endereco.setLogradouro("Rua Gago Coutinho");
+		endereco.setNumero("111");
+		endereco.setComplemento("Casa");
+		endereco.setBairro("Maraponga");
+		endereco.setCidade("Fortaleza");
+		endereco.setEstado("CE");
+		
+		Pedido pedido = new Pedido();
+		//pedido.setId(1);  Comentado porque estamos usando o IDENTITY
+		pedido.setDataCriacao(LocalDateTime.now());
+		pedido.setStatus(StatusPedido.AGUARDANDO);
+		pedido.setTotal(new BigDecimal(1000));
+		pedido.setCliente(cliente);
+		pedido.setEnderecoEntrega(endereco);
+	
+		
+		entityManager.getTransaction().begin();
+		entityManager.persist(pedido);
+		entityManager.getTransaction().commit();
+		
+		entityManager.clear();
+		
+		Pedido pedidoVerificacao = entityManager.find(Pedido.class, pedido.getId());
+		Assert.assertNotNull(pedidoVerificacao);
+	}
+	
+	
+}

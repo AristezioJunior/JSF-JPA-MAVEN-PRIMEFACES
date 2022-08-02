@@ -1,0 +1,4 @@
+#Tomcat publish data
+#Tue Aug 02 20:26:35 BRT 2022
+org.eclipse.jst.jee.server\:curso-jsf-e-primefaces-essencial=C\:\\apache-tomcat-8.5.72\\wtpwebapps\\curso-jsf-e-primefaces-essencial
+org.eclipse.jst.jee.server\:/binary\:C\:\\Users\\AristezioJunior\\.m2\\repository\\org\\primefaces\\primefaces\\11.0.0\\primefaces-11.0.0.jar=C\:\\apache-tomcat-8.5.72\\wtpwebapps\\curso-jsf-e-primefaces-essencial\\WEB-INF\\lib\\primefaces-11.0.0.jar

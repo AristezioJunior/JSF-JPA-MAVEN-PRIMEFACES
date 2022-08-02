@@ -1,0 +1,200 @@
+package com.algaworks.erp.controller;
+
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.faces.convert.Converter;
+//import javax.enterprise.context.ApplicationScoped;
+//import javax.enterprise.context.SessionScoped;
+import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import com.algaworks.erp.model.Empresa;
+import com.algaworks.erp.model.RamoAtividade;
+import com.algaworks.erp.model.TipoEmpresa;
+import com.algaworks.erp.repository.Empresas;
+import com.algaworks.erp.repository.RamoAtividades;
+import com.algaworks.erp.service.CadastroEmpresaService;
+import com.algaworks.erp.util.FacesMessages;
+
+@Named
+//@RequestScoped //Inicia a intancia quando a requisição é iniciada e termina quando a requisição termina
+@ViewScoped //Escopo inicia no momento que a página é criada e termina quando a sessão termine
+//@SessionScoped //Escopo por sessão.
+//@ApplicationScoped //Só pode ter uma instancia de manageBean, mesmo se fechar o broser o escopo vai se manter na mesma
+//O escopo mais utilizado pe o de View
+public class GestaoEmpresasBean implements Serializable {
+	
+
+	private static final long serialVersionUID = 1L;
+	
+	@Inject
+	private Empresas empresas;
+	
+	@Inject
+	private FacesMessages messages;
+	
+	@Inject
+    private RamoAtividades ramoAtividades;
+	
+	@Inject
+	private CadastroEmpresaService cadastroEmpresaService;
+	
+	private List<Empresa> listaEmpresas;
+	
+	private String termoPesquisa;
+	
+	 private Converter ramoAtividadeConverter;
+	 
+	 private Empresa empresa;
+	 
+	 public void prepararNovaEmpresa() {
+	        empresa = new Empresa();
+	    }
+	 
+	 public void prepararEdicao() {
+		 ramoAtividadeConverter = new RamoAtividadeConverter(Arrays.asList(empresa.getRamoAtividade()));
+	 }
+	 
+	 
+	 public void salvar() {
+	        cadastroEmpresaService.salvar(empresa);
+	        
+	        atualizarRegistros();	       
+	        
+	        messages.info("Empresa salva com sucesso!");
+	        
+	        //RequestContext.getCurrentInstance().update(Arrays.asList(
+	                //"frm:empresasDataTable", "frm:messages"));
+
+	 }
+	 
+	 public void excluir() {
+		 cadastroEmpresaService.excluir(empresa);
+		 
+		 empresa = null;
+		 
+		 atualizarRegistros();
+		 
+		 messages.info("Empresa excluida com sucesso!");
+	 }
+	 
+	
+	public void pesquisar() {
+		listaEmpresas = empresas.pesquisar(termoPesquisa);
+		
+		if(listaEmpresas.isEmpty()) {
+			messages.info("Sua consulta não retornou registro.");
+		}
+	}
+	
+	public void todasEmpresas() {
+		listaEmpresas = empresas.todas();
+	}
+	
+	public List<RamoAtividade> completarRamoAtividade(String termo) {
+        List<RamoAtividade> listaRamoAtividades = ramoAtividades.pesquisar(termo);
+        
+        ramoAtividadeConverter = new RamoAtividadeConverter(listaRamoAtividades);
+        
+        return listaRamoAtividades;
+    }
+	
+    private boolean jaHouvePesquisa() {
+        return termoPesquisa != null && !"".equals(termoPesquisa);
+    }
+
+    
+    public void atualizarRegistros() {
+    	 if (jaHouvePesquisa()) {
+	            pesquisar();
+	        } else {
+	            todasEmpresas();
+	        }
+    }
+
+	
+	
+	//####GET AND SET####
+	public List<Empresa> getListaEmpresas() {
+		return listaEmpresas;
+	}
+
+	public String getTermoPesquisa() {
+		return termoPesquisa;
+	}
+
+	public void setTermoPesquisa(String termoPesquisa) {
+		this.termoPesquisa = termoPesquisa;
+	}
+	
+	public TipoEmpresa[] getTiposEmpresa() {
+		return TipoEmpresa.values();
+	}
+	
+    public Converter getRamoAtividadeConverter() {
+        return ramoAtividadeConverter;
+    }
+
+	public Empresa getEmpresa() {
+		return empresa;
+	}	
+
+	public void setEmpresa(Empresa empresa) {
+		this.empresa = empresa;
+	}
+
+	public boolean isEmpresaSeleciona() {
+		return empresa != null && empresa.getId() != null;
+	}
+ 	
+
+	
+	
+	
+}
+
+
+
+
+
+
+
+
+
+
+//METODOS UTILIZADOS ATÉ O 3º MÓDULO
+
+//private Empresa empresa = new Empresa();
+//
+//public void salvar() {
+//	System.out.println("Razão Social: " + empresa.getRazaoSocial()
+//	+ " - Nome fantasia: " + empresa.getNomeFantasia()
+//	+ " - Tipo: " + empresa.getTipo());
+//}
+//
+//public String ajuda() {
+//	return "AjudaGestaoEmpresas?faces-redirect=true";
+//}
+//
+//
+//public Empresa getEmpresa() {
+//	return empresa;
+//}
+//
+//public TipoEmpresa[] getTiposEmpresa() {
+//	return TipoEmpresa.values(); //ajuda a trazer o valores do array
+//}
+
+
+//
+//private static Integer NUMERO = 0;	
+//public GestaoEmpresasBean() {
+//	NUMERO++;
+//}
+//
+//public Integer getNumero() {
+//	return NUMERO;
+//}
